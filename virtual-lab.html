@@ -1,0 +1,130 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Digital Electronics Virtual Lab – MES 201</title>
+<style>
+:root{--bg:#eef2f7;--fg:#14202e;--cd:#fff;--mu:#5b6b7c;--ac:#0a84ff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0b1220;--fg:#e6edf6;--cd:#141d2e;--mu:#8fa1b6}}
+:root[data-theme=dark]{--bg:#0b1220;--fg:#e6edf6;--cd:#141d2e;--mu:#8fa1b6}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px system-ui,Segoe UI,sans-serif}
+header{padding:18px 20px;background:linear-gradient(120deg,#0a84ff,#7c3aed,#06b6d4,#0a84ff);background-size:300% 300%;animation:bg 8s ease infinite;color:#fff}
+@keyframes bg{50%{background-position:100% 50%}}h1{margin:0;font-size:22px}header p{margin:4px 0 0;opacity:.9}
+.chips{display:flex;gap:6px;flex-wrap:wrap;padding:8px 16px 0}
+.chip{border:1px solid #8885;background:var(--cd);color:var(--fg);border-radius:20px;padding:6px 12px;cursor:pointer;transition:.2s;font:inherit}
+.chip:hover{transform:translateY(-2px);border-color:var(--ac)}.chip.on{background:var(--ac);color:#fff}.chip.ok::after{content:" ✓";color:#22c55e;font-weight:700}
+main{display:grid;grid-template-columns:310px 1fr;gap:14px;padding:12px 16px 24px}@media(max-width:860px){main{grid-template-columns:1fr}}
+.card{background:var(--cd);border-radius:14px;padding:14px;box-shadow:0 2px 12px #0003;animation:up .5s}
+@keyframes up{from{opacity:0;transform:translateY(12px)}}
+h2,h3{margin:.2em 0}.mu{color:var(--mu)}li{margin:4px 0}#dg{padding-left:18px;font-size:13px}#hn{background:#fb02;padding:8px;border-radius:8px}
+.bd{position:relative;background:linear-gradient(#c9ced6,#aab1bc);border:6px solid #8a919c;border-radius:12px;padding:12px;color:#111;min-height:300px}
+.tr{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;padding:10px;background:#e8ebef;border-radius:8px;margin-bottom:14px}
+.pt{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:44px}.pt b{font-size:11px}
+.pn{width:20px;height:20px;border-radius:50%;background:#333;border:3px solid #999;cursor:pointer;transition:.15s}
+.pn:hover{transform:scale(1.35)}.pn.h{background:#16a34a}.pn.l{background:#64748b}.pn.vcc{background:#dc2626}.pn.gnd{background:#000}
+.pn.sel{box-shadow:0 0 0 3px #fb0;animation:pl .6s infinite alternate}@keyframes pl{to{box-shadow:0 0 0 8px #fb06}}
+.tg{width:38px;height:20px;border-radius:12px;border:0;background:#777;position:relative;cursor:pointer;transition:.2s}
+.tg::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.2s}.tg.on{background:#16a34a}.tg.on::after{left:20px}
+.led i{display:block;width:22px;height:22px;border-radius:50%;background:#5a1010;border:2px solid #333;transition:.2s}
+.led.on i{background:#ff3b30;box-shadow:0 0 16px 6px #ff3b30aa;animation:gl .7s infinite alternate}@keyframes gl{to{box-shadow:0 0 26px 10px #ff3b3066}}
+.ics{display:flex;flex-wrap:wrap}.ic{background:#1e1e22;border-radius:6px;padding:8px 8px;margin:6px;position:relative;color:#ddd;animation:up .6s}
+.ic::before{content:"";position:absolute;left:-1px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:0 10px 10px 0;background:#aab1bc}
+.row{display:flex;gap:6px}.pc{display:flex;flex-direction:column;align-items:center;gap:2px}.pc i{font:9px monospace;color:#9aa;font-style:normal;line-height:1}
+.ic b{display:block;text-align:center;margin:6px 0;font:12px monospace;letter-spacing:1px}
+#wr{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:5}
+#wr path{fill:none;stroke-width:5;stroke-linecap:round;pointer-events:stroke;cursor:pointer}
+#wr .fl{stroke:#fff;stroke-width:3;stroke-dasharray:4 12;animation:fw .6s linear infinite}@keyframes fw{to{stroke-dashoffset:-16}}
+table{border-collapse:collapse;width:100%;font:12px monospace}td,th{border:1px solid #8883;padding:3px 6px;text-align:center}.g{background:#16a34a22}.b{background:#dc262622}
+.pop{animation:pp .6s}@keyframes pp{50%{transform:scale(1.15)}}
+#tz{position:fixed;bottom:24px;left:50%;transform:translate(-50%,40px);background:#111;color:#fff;padding:10px 16px;border-radius:10px;opacity:0;z-index:9}
+#tz.s{animation:tz 2.6s}@keyframes tz{10%,85%{opacity:1;transform:translate(-50%,0)}}
+</style></head><body>
+<header><h1>🔌 Digital Electronics Virtual Lab – MES 201</h1><p>SRM University-AP · Nothing is pre-wired. Click two pins to join them with a wire, just like the real trainer kit.</p></header>
+<div class="chips" id="xs"></div><div class="chips" id="ps"></div>
+<main><div class="card" id="info"></div><div class="card"><b id="st"></b><div id="bd" class="bd"></div></div></main><div id="tz"></div>
+<script>
+const U=void 0,$=s=>document.querySelector(s),Q=s=>[...document.querySelectorAll(s)];
+const GN='1A,1B,1Y,2A,2B,2Y,GND,3Y,3A,3B,4Y,4A,4B,VCC';
+const q=(f,m=[[1,2,3],[4,5,6],[10,9,8],[13,12,11]],nm=GN)=>({n:14,v:14,g:7,nm,o:m.map(x=>x[2]),u:m.map(([a,b,y])=>c=>c.set(y,f(c.v(a),c.v(b))))});
+const d74=([r,d,k,p,y,z])=>c=>{const e=c.e(k,1),R=c.v(r),P=c.v(p);let s=c.S[y]|0;if(!R&&!P){c.set(y,1);c.set(z,1);return}if(!P)s=1;else if(!R)s=0;else if(e)s=c.v(d);c.S[y]=s;c.set(y,s);c.set(z,s^1)};
+const j76=([k,p,r,j,kk,y,z])=>c=>{const e=c.e(k,0),R=c.v(r),P=c.v(p),J=c.v(j),K=c.v(kk);let s=c.S[y]|0;if(!R&&!P){c.set(y,1);c.set(z,1);return}if(!P)s=1;else if(!R)s=0;else if(e)s=J&K?s^1:J?1:K?0:s;c.S[y]=s;c.set(y,s);c.set(z,s^1)};
+const Y={'7408':q((a,b)=>a&b),'7432':q((a,b)=>a|b),'7486':q((a,b)=>a^b),'7400':q((a,b)=>a&b^1),
+'7402':q((a,b)=>(a|b)^1,[[2,3,1],[5,6,4],[8,9,10],[11,12,13]],'1Y,1A,1B,2Y,2A,2B,GND,3A,3B,3Y,4A,4B,4Y,VCC'),
+'7404':{n:14,v:14,g:7,nm:'1A,1Y,2A,2Y,3A,3Y,GND,4Y,4A,5Y,5A,6Y,6A,VCC',o:[2,4,6,8,10,12],u:[[1,2],[3,4],[5,6],[9,8],[11,10],[13,12]].map(([a,y])=>c=>c.set(y,c.v(a)^1))},
+'74153':{n:16,v:16,g:8,nm:'/1E,S1,1I3,1I2,1I1,1I0,1Y,GND,2Y,2I0,2I1,2I2,2I3,S0,/2E,VCC',o:[7,9],u:[c=>{const s=c.v(2)*2+c.v(14);c.set(7,c.v(1)?0:c.v([6,5,4,3][s]));c.set(9,c.v(15)?0:c.v([10,11,12,13][s]))}]},
+'74139':{n:16,v:16,g:8,nm:'/1E,1A0,1A1,1Y0,1Y1,1Y2,1Y3,GND,2Y3,2Y2,2Y1,2Y0,2A1,2A0,/2E,VCC',o:[4,5,6,7,12,11,10,9],u:[c=>{const s=c.v(3)*2+c.v(2),t=c.v(13)*2+c.v(14);[4,5,6,7].forEach((p,i)=>c.set(p,c.v(1)||i!=s?1:0));[12,11,10,9].forEach((p,i)=>c.set(p,c.v(15)||i!=t?1:0))}]},
+'74138':{n:16,v:16,g:8,nm:'A,B,C,/E1,/E2,E3,Y7,GND,Y6,Y5,Y4,Y3,Y2,Y1,Y0,VCC',o:[15,14,13,12,11,10,9,7],u:[c=>{const on=!c.v(4)&&!c.v(5)&&c.v(6),s=c.v(3)*4+c.v(2)*2+c.v(1);[15,14,13,12,11,10,9,7].forEach((p,i)=>c.set(p,on&&i==s?0:1))}]},
+'74148':{n:16,v:16,g:8,nm:'I4,I5,I6,I7,EI,A2,A1,GND,A0,I0,I1,I2,I3,GS,EO,VCC',o:[6,7,9,14,15],u:[c=>{let k=-1;[10,11,12,13,1,2,3,4].forEach((p,i)=>{if(!c.v(p))k=i});const a=7-k,o=c.v(5)?[1,1,1,1,1]:k<0?[1,1,1,1,0]:[a>>2&1,a>>1&1,a&1,0,1];[6,7,9,14,15].forEach((p,i)=>c.set(p,o[i]))}]},
+'7485':{n:16,v:16,g:8,nm:'B3,A<B in,A=B in,A>B in,A>B,A=B,A<B,GND,B0,A0,B1,A1,A2,B2,A3,VCC',o:[5,6,7],u:[c=>{const g=a=>a.reduce((s,p,i)=>s+c.v(p)*(1<<i),0),A=g([10,12,13,15]),B=g([9,11,14,1]);let t=+(A>B),l=+(A<B),e=0;if(A==B){e=c.v(3);t=e?0:c.v(4);l=e?0:c.v(2)}c.set(5,t);c.set(6,e);c.set(7,l)}]},
+'7474':{n:14,v:14,g:7,q:1,nm:'CLR1,D1,CK1,PRE1,Q1,/Q1,GND,/Q2,Q2,PRE2,CK2,D2,CLR2,VCC',o:[5,6,9,8],u:[d74([1,2,3,4,5,6]),d74([13,12,11,10,9,8])]},
+'7476':{n:16,v:5,g:13,q:1,nm:'CK1,PRE1,CLR1,J1,VCC,CK2,PRE2,CLR2,J2,/Q2,Q2,K2,GND,/Q1,Q1,K1',o:[15,14,11,10],u:[j76([1,2,3,4,16,15,14]),j76([6,7,8,9,12,11,10])]},
+'7490':{n:14,v:5,g:10,q:1,nm:'CKB,R01,R02,NC,VCC,R91,R92,QC,QB,GND,QD,QA,NC,CKA',o:[12,9,8,11],u:[c=>{const a=c.e(14,0),b=c.e(1,0),S=c.S;S.a|=0;S.b|=0;if(c.v(2)&&c.v(3)){S.a=0;S.b=0}else if(c.v(6)&&c.v(7)){S.a=1;S.b=4}else{if(a)S.a^=1;if(b)S.b=(S.b+1)%5}c.set(12,S.a);c.set(9,S.b&1);c.set(8,S.b>>1&1);c.set(11,S.b>>2&1)}]},
+'7495':{n:14,v:14,g:7,q:1,nm:'SER,A,B,C,D,MODE,GND,CK2,CK1,QD,QC,QB,QA,VCC',o:[13,12,11,10],u:[c=>{const a=c.e(9,0),b=c.e(8,0),S=c.S;S.q=S.q||[0,0,0,0];if(a||b)S.q=c.v(6)?[2,3,4,5].map(p=>c.v(p)):[c.v(1),...S.q.slice(0,3)];[13,12,11,10].forEach((p,i)=>c.set(p,S.q[i]))}]}};
+const PW='Pin 14→+5V and pin 7→GND on every IC. ';
+const P=[
+{e:1,n:'Basic gates',i:['7408','7432','7404','7400','7402','7486'],s:['A','B'],l:['AND','OR','NOT','NAND','NOR','XOR'],f:([a,b])=>[a&b,a|b,a^1,a&b^1,(a|b)^1,a^b],h:PW+'Then A→pin 1 and B→pin 2 of a gate, and its output (pin 3) → LED. NOT (7404): A→pin 1, output pin 2. NOR (7402): inputs pins 2,3, output pin 1.'},
+{e:2,n:'Binary → Gray',i:['7486'],s:['B3','B2','B1','B0'],l:['G3','G2','G1','G0'],f:([a,b,c,d])=>[a,a^b,b^c,c^d],h:PW+'G3=B3: wire switch B3 straight to LED G3. B3,B2→pins 1,2 (out 3=G2). B2,B1→pins 4,5 (out 6=G1). B1,B0→pins 9,10 (out 8=G0).'},
+{e:2,n:'Gray → Binary',i:['7486'],s:['G3','G2','G1','G0'],l:['B3','B2','B1','B0'],f:([a,b,c,d])=>{const y=a^b,z=y^c;return[a,y,z,z^d]},h:PW+'B3=G3 (direct wire). G3,G2→pins 1,2 (out 3=B2). Pin 3 and G1→pins 4,5 (out 6=B1). Pin 6 and G0→pins 9,10 (out 8=B0).'},
+{e:3,n:'Half adder',i:['7486','7408'],s:['A','B'],l:['S','C'],f:([a,b])=>[a^b,a&b],h:PW+'XOR 7486: A,B→pins 1,2, out pin 3→S. AND 7408: A,B→pins 1,2, out pin 3→C.'},
+{e:3,n:'Full adder',i:['7486','7408','7432'],s:['A','B','Cin'],l:['S','Cout'],f:([a,b,c])=>[a^b^c,a&b|c&(a^b)],h:PW+'7486: A,B→1,2 (out 3); then pin 3 & Cin→4,5 (out 6 = S). 7408: A,B→1,2; 7486 pin 3 & Cin→4,5. 7432: 7408 pin 3→1, pin 6→2; out 3 = Cout.'},
+{e:3,n:'Half subtractor',i:['7486','7408','7404'],s:['A','B'],l:['D','Bout'],f:([a,b])=>[a^b,(a^1)&b],h:PW+'XOR: A,B→1,2, out 3=D. NOT 7404: A→1 (out 2). AND 7408: 7404 pin 2→1, B→2, out 3=Bout.'},
+{e:3,n:'Full subtractor',i:['7486','7408','7404','7432'],s:['A','B','Bin'],l:['D','Bout'],f:([a,b,c])=>[a^b^c,(a^1)&b|((a^b)^1)&c],h:PW+'D: 7486 A,B→1,2; pin 3 & Bin→4,5; out 6=D. Bout: NOT A (7404 1→2); 7408 pins 1,2 = (7404 pin2, B); NOT of 7486 pin 3 (7404 3→4); 7408 pins 4,5 = (7404 pin 4, Bin); 7432 pins 1,2 = (7408 pins 3,6); out 3=Bout.'},
+{e:4,n:'Multiplexer',i:['74153'],s:['I0','I1','I2','I3','S0','S1','E'],l:['Z'],f:x=>[x[6]?0:x[x[5]*2+x[4]]],h:'Pin 16→+5V, pin 8→GND. E→pin 1 (0 = enabled). I0..I3→pins 6,5,4,3. S0→14, S1→2. Output ZA = pin 7→LED.'},
+{e:4,n:'Demultiplexer',i:['74139'],s:['E','S0','S1'],l:['Y0','Y1','Y2','Y3'],f:([e,a,b])=>[0,1,2,3].map(i=>e||i!=b*2+a?1:0),h:'Pin 16→+5V, pin 8→GND. E→pin 1 (0 = enabled), S0→2, S1→3. Outputs Y0..Y3 = pins 4,5,6,7 (active-low: the chosen one goes OFF).'},
+{e:5,n:'Encoder 8→3',i:['74148'],s:['EI','I0','I1','I2','I3','I4','I5','I6','I7'],l:['A2','A1','A0','GS','EO'],f:x=>{let k=-1;x.slice(1).forEach((b,i)=>{if(!b)k=i});const a=7-k;return x[0]?[1,1,1,1,1]:k<0?[1,1,1,1,0]:[a>>2&1,a>>1&1,a&1,0,1]},h:'Pin 16→+5V, pin 8→GND. EI→pin 5 (0 = enabled). I0..I7→pins 10,11,12,13,1,2,3,4. Outputs A2,A1,A0,GS,EO = pins 6,7,9,14,15. Inputs are active-LOW.'},
+{e:5,n:'Decoder 3→8',i:['74138'],s:['A','B','C'],l:['Y0','Y1','Y2','Y3','Y4','Y5','Y6','Y7'],f:([a,b,c])=>[0,1,2,3,4,5,6,7].map(i=>i==c*4+b*2+a?0:1),h:'Pin 16→+5V, pin 8→GND. Pins 4,5→GND, pin 6→+5V. A,B,C→pins 1,2,3. Outputs Y0..Y7 = pins 15,14,13,12,11,10,9,7 (active-low).'},
+{e:6,n:'Magnitude comparator',i:['7485'],s:['A0','A1','A2','A3','B0','B1','B2','B3'],l:['A>B','A=B','A<B'],f:x=>{const A=x[0]+2*x[1]+4*x[2]+8*x[3],B=x[4]+2*x[5]+4*x[6]+8*x[7];return[+(A>B),+(A==B),+(A<B)]},h:'Pin 16→+5V, pin 8→GND. A0..A3→pins 10,12,13,15. B0..B3→pins 9,11,14,1. Pin 3→+5V, pins 2 and 4→GND. Outputs: A>B=5, A=B=6, A<B=7.'},
+{e:7,n:'RS flip-flop',i:['7400'],s:['S','R','CLK'],l:['Q','Q̄'],f:([s,r,k],p)=>!k?p:s&r?[1,1]:s?[1,0]:r?[0,1]:p,h:PW+'S→pin 1, CLK→pins 2 and 4, R→pin 5. Pin 3→pin 10, pin 6→pin 13, Q (pin 8)→pin 12, Q̄ (pin 11)→pin 9. Q=pin 8, Q̄=pin 11 → LEDs.'},
+{e:7,n:'JK flip-flop',i:['7476'],s:['J','K'],l:['Q','Q̄'],q:1,f:([j,k],p)=>{const y=j&k?p[0]^1:j?1:k?0:p[0];return[y,y^1]},h:'Pin 5→+5V, pin 13→GND. J→pin 4, K→pin 16, CLK→pin 1. Q=pin 15, Q̄=pin 14. Tie PRE (2) and CLR (3) to +5V. Press Pulse (falling edge triggers).'},
+{e:7,n:'D flip-flop',i:['7474'],s:['D'],l:['Q','Q̄'],q:1,f:([d])=>[d,d^1],h:PW+'D→pin 2, CLK→pin 3, PRE (4) and CLR (1)→+5V. Q=pin 5, Q̄=pin 6. Rising edge triggers.'},
+{e:7,n:'T flip-flop',i:['7476'],s:['T'],l:['Q','Q̄'],q:1,f:([t],p)=>{const y=t?p[0]^1:p[0];return[y,y^1]},h:'Like the JK circuit, but tie J (pin 4) and K (pin 16) together and connect both to T.'},
+{e:8,n:'Ring counter',i:['7474','7474'],s:['ORI'],l:['Q2','Q1','Q0'],q:1,f:(x,p)=>[p[2],p[0],p[1]],h:PW+'Chain: U2 pin 5 (Q0)→U1 pin 2; U1 pin 5 (Q2)→U1 pin 12; U1 pin 9 (Q1)→U2 pin 2. Clocks (U1 pins 3,11; U2 pin 3)→CLK. ORI→U1 pin 4 (preset) and U1 pin 13, U2 pin 1 (clear). LEDs: Q2=U1.5, Q1=U1.9, Q0=U2.5. Set ORI=0 then 1, then Pulse.'},
+{e:8,n:'Johnson counter',i:['7474','7474'],s:['ORI'],l:['Q2','Q1','Q0'],q:1,f:(x,p)=>[p[2]^1,p[0],p[1]],h:'Same as the ring counter, but U2 pin 6 (Q̄0)→U1 pin 2. ORI→clear pins U1.1, U1.13, U2.1 so it starts at 000. Set ORI=0 then 1, then Pulse.'},
+{e:9,n:'3-bit sync counter',i:['7476','7476','7408'],s:[],l:['QC','QB','QA'],q:1,f:(x,p)=>{const n=(p[0]*4+p[1]*2+p[2]+1)%8;return[n>>2&1,n>>1&1,n&1]},h:'7476: pin 5→+5V, pin 13→GND. 7408: 14→+5V, 7→GND. U1: J(4),K(16)→+5V. U1 second FF: J(9),K(12)→QA (U1.15). U3 pins 1,2←QA,QB (U1.11); out 3→U2 J(4),K(16). All clocks (U1.1, U1.6, U2.1)→CLK. LEDs: QA=U1.15, QB=U1.11, QC=U2.15.'},
+{e:10,n:'Decade counter 7490',i:['7490'],s:[],l:['QD','QC','QB','QA'],q:1,f:(x,p)=>{const n=(p[0]*8+p[1]*4+p[2]*2+p[3]+1)%10;return[n>>3&1,n>>2&1,n>>1&1,n&1]},h:'Pin 5→+5V, pin 10→GND. Pins 2,3,6,7→GND. CLK→pin 14, and QA (pin 12)→pin 1. LEDs: QD=pin 11, QC=pin 8, QB=pin 9, QA=pin 12.'},
+{e:11,n:'Shift register 7495',i:['7495'],s:['SER','A','B','C','D','M'],l:['QA','QB','QC','QD'],q:1,f:(x,p)=>x[5]?x.slice(1,5):[x[0],p[0],p[1],p[2]],h:'Pin 14→+5V, pin 7→GND. SER→1, A,B,C,D→2,3,4,5, M→6. CLK→pin 9 (or 8). Outputs QA..QD=pins 13,12,11,10. M=1 loads A-D, M=0 shifts right.'}];
+const CL=['#ef4444','#3b82f6','#22c55e','#f59e0b','#a855f7','#06b6d4'],ex=[...new Set(P.map(p=>p.e))];
+let pi=0,ics=[],sw=Array(9).fill(0),ck=0,W=[],sel=null,pw=0,log=[],res=null,par={},dr={},chg=0,bz=0,auto=0,tm,dn={};
+try{dn=JSON.parse(localStorage.dvl||'{}')}catch(e){}
+const fd=x=>par[x]===x?x:par[x]=fd(par[x]),cn=(a,b)=>par[a]&&par[b]&&fd(a)==fd(b);
+function rb(){par={};dr={};W.forEach(w=>{par[w.a]=par[w.a]||w.a;par[w.b]=par[w.b]||w.b;par[fd(w.a)]=fd(w.b)});for(const n in par)(dr[fd(n)]=dr[fd(n)]||[]).push(n)}
+const dv=n=>n=='VCC'?(pw?1:U):n=='GND'?0:n=='CK'?(pw?ck:U):/^S\d/.test(n)?(pw?sw[+n.slice(1)]:U):n[0]=='U'?ics.find(c=>c.id==n.split('.')[0]).o[n.split('.')[1]]:U;
+const val=n=>{if(!par[n])return dv(n);for(const m of dr[fd(n)]){const x=dv(m);if(x!==U)return x}};
+function run(ne){let n=0;do{chg=0;const sn={};for(const r in dr)sn[r]=val(dr[r][0]);const sv=x=>par[x]?sn[fd(x)]:dv(x);
+for(const c of ics){const T=Y[c.t],on=pw&&val(c.id+'.'+T.v)===1&&val(c.id+'.'+T.g)===0;if(!on){for(const p in c.o){delete c.o[p];chg=1}continue}
+const X={S:c.s,v:p=>{const x=(T.q?sv:val)(c.id+'.'+p);return x===U?1:x},set:(p,x)=>{if(c.o[p]!==x){c.o[p]=x;chg=1}},e:(p,r)=>{const cur=X.v(p),old=c.pv[p];c.pv[p]=cur;return!ne&&old!==U&&(r?!old&&cur:old&&!cur)}};T.u.forEach(u=>u(X))}}while(chg&&++n<40)}
+const rd=()=>P[pi].l.map((_,i)=>{const v=pw?val('L'+i):U;return v===U?null:v}),z=a=>a.map(x=>x||0);
+function tt(m){const e=$('#tz');e.textContent=m;e.classList.remove('s');void e.offsetWidth;e.classList.add('s')}
+function dg(){const m=[];ics.forEach(c=>{const T=Y[c.t];if(!cn(c.id+'.'+T.v,'VCC'))m.push(`${c.id} (IC ${c.t}): pin ${T.v} (VCC) is not wired to +5V, so the chip has no power.`);if(!cn(c.id+'.'+T.g,'GND'))m.push(`${c.id} (IC ${c.t}): pin ${T.g} (GND) is not wired to GND.`)});
+if(cn('VCC','GND'))m.push('SHORT CIRCUIT: +5V is wired straight to GND. Remove that wire!');
+else for(const r in dr){const v=new Set(dr[r].map(dv).filter(x=>x!==U));if(v.size>1)m.push('Two outputs are fighting on one wire ('+dr[r].join(', ')+'). Remove one wire.')}
+if(!W.length)m.push('No wires yet. Start by wiring +5V and GND to every IC.');return m}
+function pn(n){if(pw)return tt('Turn the power OFF before changing wires.');if(!sel)sel=n;else if(sel==n)sel=null;else{if(!W.some(w=>w.a==sel&&w.b==n||w.a==n&&w.b==sel))W.push({a:sel,b:n,c:CL[W.length%6]});sel=null;rb();run(1)}ui()}
+function tp(){if(!pw){if(cn('VCC','GND'))return tt('Short circuit! Remove the +5V–GND wire first.');pw=1;rz(1)}else{pw=0;clearInterval(tm);auto=0;run(1)}ui()}
+function rz(k){ics.forEach(c=>{c.o={};c.s={};c.pv={}});log=[];res=null;run(1);if(!k)ui()}
+function ts(i){sw[i]^=1;run();ui()}
+function ta(){if(!pw)return tt('Switch the power ON first.');auto^=1;clearInterval(tm);if(auto)tm=setInterval(pulse,900);ui()}
+async function pulse(){if(!pw)return tt('Switch the power ON first.');if(bz)return;bz=1;const ins=sw.slice(0,P[pi].s.length),b=z(rd());ck=1;run();ui();await new Promise(r=>setTimeout(r,250));ck=0;run();log.push({ins,before:b,after:rd()});if(log.length>40)log.shift();bz=0;ui()}
+function cw(){if(pw)return tt('Turn the power OFF first.');W=[];sel=null;rb();run(1);ui()}
+function vf(){const p=P[pi];if(!pw)return tt('Switch the power ON first.');let rows=[];
+if(p.q)rows=log.map(r=>({x:r.ins,e:p.f(r.ins,r.before),o:r.after}));
+else{const n=p.s.length,o=sw.slice();let pr=z(rd());for(let k=0;k<1<<n;k++){const x=[...Array(n)].map((_,j)=>k>>(n-1-j)&1);x.forEach((b,j)=>sw[j]=b);run();const ob=rd();rows.push({x,e:p.f(x,pr),o:ob});pr=z(ob)}o.forEach((b,j)=>sw[j]=b);run()}
+rows.forEach(r=>r.ok=r.e.every((v,i)=>r.o[i]===v));const bad=rows.find(r=>!r.ok),need=p.q&&rows.length<4,ok=!bad&&!need&&rows.length>0;let msg;
+if(ok){msg='All '+rows.length+' rows match the truth table. Progress saved!';dn[pi]=1;try{localStorage.dvl=JSON.stringify(dn)}catch(e){}}
+else if(need)msg='Press Pulse at least 4 times (change the switches too), then press Verify again.';
+else{const i=bad.e.findIndex((v,j)=>bad.o[j]!==v);msg=`When ${p.s.map((s,j)=>s+'='+bad.x[j]).join(', ')||'the clock pulses'}, output ${p.l[i]} should be ${bad.e[i]} but ${bad.o[i]==null?'it has no signal. Is it wired to its LED?':'it shows '+bad.o[i]}. Check the wires for that part.`}
+res={ok,msg,rows};ui()}
+function icH(c){const T=Y[c.t],h=T.n/2,pc=(k,t)=>{const a=`<i>${k}</i>`,b=`<div class=pn data-n="${c.id}.${k}" title="Pin ${k}: ${T.nm.split(',')[k-1]}"></div>`;return`<div class=pc>${t?a+b:b+a}</div>`};
+return`<div class=ic><div class=row>${[...Array(h)].map((_,j)=>pc(T.n-j,1)).join('')}</div><b>${c.id} · ${c.t}</b><div class=row>${[...Array(h)].map((_,j)=>pc(j+1,0)).join('')}</div></div>`}
+function ld(i){clearInterval(tm);auto=0;bz=0;pi=i;const p=P[i];ics=p.i.map((t,k)=>({id:'U'+(k+1),t,o:{},s:{},pv:{}}));W=[];sw.fill(0);ck=0;pw=0;log=[];res=null;sel=null;
+$('#info').innerHTML=`<h2>Exp ${p.e}: ${p.n}</h2><p class=mu>ICs: ${p.i.map(t=>'IC '+t).join(', ')}</p><ol><li>Click one pin, then another pin, to join them with a wire. Click a wire to remove it.</li><li>Keep power OFF while wiring.</li><li>Wire +5V and GND to every IC, then switches → inputs, outputs → LEDs.</li><li>Power ON, flip switches${p.q?' and press Pulse':''}.</li><li>Press Verify.</li></ol><button class=chip onclick="$('#hn').hidden=!$('#hn').hidden">💡 Hint</button> <button class=chip onclick=vf()>✅ Verify</button> <button class=chip onclick=cw()>🧹 Clear wires</button> <button class=chip onclick=rz()>↺ Reset</button><p id=hn hidden>${p.h}</p><h3>Wiring check</h3><ul id=dg></ul><div id=rv></div>`;
+$('#bd').innerHTML=`<svg id=wr></svg><div class=tr><div class=pt><b>POWER</b><button id=pwb class=tg onclick=tp()></button></div><div class=pt><b>+5V</b><div class="pn vcc" data-n=VCC></div></div><div class=pt><b>GND</b><div class="pn gnd" data-n=GND></div></div>${p.s.map((x,k)=>`<div class=pt><b>${x}</b><div class=pn data-n=S${k}></div><button class=tg id=t${k} onclick=ts(${k})></button></div>`).join('')}<div class=pt><b>CLOCK</b><div class=pn data-n=CK></div><button class=chip onclick=pulse()>Pulse</button><button class=chip id=ab onclick=ta()>Auto 1Hz</button></div>${p.l.map((x,k)=>`<div class=pt><b>${x}</b><div class=pn data-n=L${k}></div><div class=led id=L${k}><i></i></div></div>`).join('')}</div><div class=ics>${ics.map(icH).join('')}</div>`;rb();run(1);ui()}
+function dw(){const B=$('#bd'),b=B.getBoundingClientRect(),pos=n=>{const e=$('[data-n="'+n+'"]');if(!e)return[0,0];const r=e.getBoundingClientRect();return[r.left-b.left-B.clientLeft+r.width/2,r.top-b.top-B.clientTop+r.height/2]};
+$('#wr').innerHTML=W.map((w,k)=>{const[a,b2]=pos(w.a),[c,d]=pos(w.b),s=`M${a} ${b2}C${a} ${b2+50},${c} ${d+50},${c} ${d}`;return`<path data-w=${k} d="${s}" stroke="${w.c}"/>${pw&&val(w.a)===1?`<path class=fl style="pointer-events:none" d="${s}"/>`:''}`}).join('')}
+function ui(){const p=P[pi];$('#pwb').classList.toggle('on',!!pw);$('#ab').textContent=auto?'⏸ Stop':'Auto 1Hz';$('#st').textContent=pw?'⚡ POWER ON — '+log.length+' clock pulses':'POWER OFF';
+sw.forEach((v,i)=>{const t=$('#t'+i);t&&t.classList.toggle('on',!!v)});p.l.forEach((_,i)=>$('#L'+i).classList.toggle('on',pw&&val('L'+i)===1));
+Q('.pn').forEach(e=>{const n=e.dataset.n,v=val(n);e.classList.toggle('h',pw&&v===1);e.classList.toggle('l',pw&&v===0);e.classList.toggle('sel',n==sel)});dw();
+const m=dg();$('#dg').innerHTML=m.length?m.map(x=>'<li>'+x+'</li>').join(''):'<li>✔ No wiring problems found.'+(pw?'':' Switch the power ON.')+'</li>';
+$('#rv').innerHTML=res?`<h3 class=pop>${res.ok?'🎉 Passed!':'Not correct yet'}</h3><p>${res.msg}</p><small class=mu>Inputs: ${p.s.join(' ')||'–'} · Outputs: ${p.l.join(' ')}</small><table><tr><th>In</th><th>Expected</th><th>Observed</th><th></th></tr>${res.rows.slice(-40).map(r=>`<tr class=${r.ok?'g':'b'}><td>${r.x.join('')}</td><td>${r.e.join('')}</td><td>${r.o.map(v=>v==null?'?':v).join('')}</td><td>${r.ok?'✓':'✗'}</td></tr>`).join('')}</table>`:'';
+$('#xs').innerHTML=ex.map(e=>{const ps=P.map((q,i)=>i).filter(i=>P[i].e==e);return`<button class="chip${p.e==e?' on':''}${ps.every(i=>dn[i])?' ok':''}" onclick=ld(${ps[0]})>Exp ${e}</button>`}).join('');
+$('#ps').innerHTML=P.map((q,i)=>q.e==p.e?`<button class="chip${i==pi?' on':''}${dn[i]?' ok':''}" onclick=ld(${i})>${q.n}</button>`:'').join('')}
+$('#bd').onclick=e=>{const p=e.target.closest('.pn'),w=e.target.closest('[data-w]');if(p)pn(p.dataset.n);else if(w){if(pw)return tt('Turn the power OFF before removing wires.');W.splice(+w.dataset.w,1);rb();run(1);ui()}};
+onresize=dw;ld(0);
+</script></body></html>
